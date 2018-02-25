@@ -487,7 +487,7 @@ function generateCalendarUI(year, month, day)
 	monthNameCell.className = "unselectable";
 	monthNameCell.setAttribute("colspan", 7);
 	monthNameCell.setAttribute("bgcolor", monthNameColor);
-	monthNameCell.style = "font-size:81px; font-weight:200; color:#AAAAAA; margin:auto";
+	monthNameCell.style = "font-size:81px; font-weight:200; font-family: arial; color:#AAAAAA; margin:auto";
 	calendar.monthName = document.createTextNode(monthName[month - 1]);
 	monthNameCell.appendChild(calendar.monthName);
 	
