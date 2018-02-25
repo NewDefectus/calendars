@@ -583,7 +583,7 @@ function generateCalendarUI(year, month, day)
 function updateCalendar()
 {
 //	Get some information about this month
-	this.monthName.innerHTML = monthName[this.month - 1];
+	this.monthName.nodeValue = monthName[this.month - 1];
 	weekDay =	new Date(this.year, this.month-1, 1).getDay() + 1;
 	daysInMonth =	new Date(this.year, this.month	, 0).getDate();
 	
