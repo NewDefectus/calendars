@@ -467,9 +467,15 @@ function generateCalendarUI(year, month, day)
 	calendar.month = month;
 	
 	
-//	Set the calendar's color to either green or black, depending on the year
-			monthNameColor="#242c19";
-	if(year%2==0)	monthNameColor="#000000";
+//	Set the calendar's color green, black or red, depending on the year
+	switch(year) {
+		case 1997:
+			monthNameColor="#242c19"; break;
+		case 2000:
+			monthNameColor="#000000"; break;
+		default:
+			monthNameColor="#b00000"; break;
+	}
 	
 	
 //	Style the calendar correctly
