@@ -468,14 +468,14 @@ function generateCalendarUI(year, month, day)
 	calendar.month = month;
 	
 	
-//	Set the calendar's color green, black or red, depending on the year
+//	Set the calendar's color to green, black, or red, depending on the year
 	switch(year) {
 		case 1997:
 			monthNameColor="#242c19"; break;
 		case 2000:
 			monthNameColor="#000000"; break;
 		default:
-			monthNameColor="#b00000"; break;
+			monthNameColor="#700000"; break;
 	}
 	
 	
@@ -495,7 +495,6 @@ function generateCalendarUI(year, month, day)
 	monthNameCell.setAttribute("bgcolor", monthNameColor);
 	monthNameCell.style = "font-size:81px; font-weight:200; color:#AAAAAA; margin:auto;";
 	calendar.monthName = document.createTextNode(monthName[month - 1]);
-	calendar.monthNameColor = monthNameColor;
 	monthNameCell.appendChild(calendar.monthName);
 	
 	
@@ -686,6 +685,19 @@ function createCalendar(year, month, day)
 	icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 	
 	
+//	Set the calendar's appearance and color
+	switch(year) {
+		case 1997:
+			monthNameColor="#242c19"; break;
+		case 2000:
+			monthNameColor="#222222"; break;
+		default:
+			monthNameColor="#700000"; break;
+	}
+	setSvg(icon, calendarSvg);
+	icon.monthNamePath.setAttribute("fill", monthNameColor);
+	
+	
 //	Style the calendar correctly
 	icon.setAttribute("class", "calendarIcon");
 	icon.setAttribute("width", "208px");
@@ -706,12 +718,8 @@ function createCalendar(year, month, day)
 	
 //	Create the calendar UI and add the calendar onto the wall
 	icon.ui = generateCalendarUI(year, month, day);
-	
-	
-//	Set the calendar's appearance and color, then add it onto the wall
-	setSvg(icon, calendarSvg);
-	icon.monthNamePath.setAttribute("fill", icon.ui.monthNameColor);
 	document.getElementById("wall").appendChild(icon);
+	
 	
 	return icon;
 }
