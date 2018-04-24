@@ -2,7 +2,7 @@
 
 
 <title>Petscop Calendars</title>
-<link rel="icon" href="https://i.imgur.com/6FtZiSK.png">
+<link rel="icon" href="icon.png">
 
 <style>
 
@@ -12,12 +12,19 @@
 .calendarIcon { position: relative; padding-right: 8em; padding-left: 8em; padding-top: 30em; }
 
 /* Calendar UI */
-td { width: 168px; height: 145px; font-size: 55px; padding: 15px; border-width: 10px; border-color: black; font-weight: bold; font-family: "arial"; vertical-align: top; }
+td { width: 168px; height: 145px; font-size: 65px; padding: 5px; border-width: 10px; border-color: black; font-weight: bold; font-family: "arial"; vertical-align: top; }
 th { width: 195px; height: 85px; font-size: 55px; border-width: 10px; border-color: black; font-family: "arial"; }
 .buttonLeft { position: relative; width: 9px; height: 10px; }
 .buttonRight { position: relative; width: 9px; height: 10px; }
 .currentDayHighlight { transform-origin: 15% 50%; -webkit-transform-origin: 15% 50%; }
 .unselectable { user-select: none; }
+
+@font-face {
+font-family: "month";
+src: url("monthFont.eot");
+src: url("monthFont.ttf") format("truetype"),
+     url("monthFont.woff") format("woff");
+}
 
 /* Christmas tree animation */
 .view { perspective: 800px; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; position: relative; bottom: 1.75em; left: 0.8em }
@@ -29,16 +36,9 @@ th { width: 195px; height: 85px; font-size: 55px; border-width: 10px; border-col
 </style>
 
 
-<div id="audio">
-<!-- Credit to u/ChappyWagon for the sound effects -->
-<audio id="oddYearSound"><source src="https://api.soundcloud.com/tracks/400525794/stream?secret_token=s-h7mXO&client_id=iIj5dLn8zOk9MleA8FuQTe3bgdNTLG4s"></audio>
-<audio id="evenYearSound"><source src="https://api.soundcloud.com/tracks/400548126/stream?secret_token=s-rszht&client_id=iIj5dLn8zOk9MleA8FuQTe3bgdNTLG4s"></audio>
-<audio id="cling"><source src="https://api.soundcloud.com/tracks/400522872/stream?secret_token=s-q8BUi&client_id=iIj5dLn8zOk9MleA8FuQTe3bgdNTLG4s"></audio>
-<audio id="questionMarkAudio"><source src="https://api.soundcloud.com/tracks/401020860/stream?secret_token=s-cSPcV&client_id=iIj5dLn8zOk9MleA8FuQTe3bgdNTLG4s"></audio>
-</div>
-
-
 </head>
+
+<!-- Credit to u/ChappyWagon for the sound effects -->
 
 
 
@@ -82,10 +82,9 @@ function createTree()
 
 function rotateView(view, rotI)
 {
-	transform = "transform: scale(0.45) rotateX(" + angles(rotI) + "deg);"
+	transform = "transform: scale(0.3807692308) translateY(10px) translateX(-25px) rotateX(" + angles(rotI) + "deg);"
 	view.style = transform + "-webkit-" + transform;
-	if(rotI >= 210)	return 0;
-	else		return rotI + 1;
+	return (rotI >= 210) ? 0 : rotI + 1;
 }
 
 function angles(i)
@@ -180,42 +179,27 @@ function createFace(type, size, isTopLayer)
 	
 	return wrapper;
 }
-</script>
 
-
-
-
-<script>
-for(i = 1; i <= 5; i++)
-{
-	audio = document.createElement("audio");
-	audio.id = "scrollSound" + i;
-	
-	source = document.createElement("source");
-	source.src = "https://api.soundcloud.com/tracks/398325906/stream?secret_token=s-Lvuon&client_id=o7gVCFFYJ2ECIMvrMC5lnyxzD02dTFcL";
-	audio.appendChild(source);
-		
-	document.getElementById("audio").appendChild(audio);
-}
-
-setTimeout(playCling, waitingTime() * 1000);
-
-function playCling()
-{
-	document.getElementById("cling").play();
-	setTimeout(playCling, waitingTime() * 1000);
-}
-
-function waitingTime()
-{
-	if(Math.random()>1/3)	return 25 + Math.random() * 32;
-	else			return 25 - Math.random() * 17;
-}
 
 christmasTree = createView();
 </script>
 
 
+
+<script>
+focused = true;
+
+setTimeout(playClink, ((Math.random()>1/3) ? 25 + Math.random() * 32 : 25 - Math.random() * 17) * 1000);
+
+function playClink()
+{
+	if(focused)	new Audio("audio/clink.mp3").play();
+	setTimeout(playClink, ((Math.random()>1/3) ? 25 + Math.random() * 32 : 25 - Math.random() * 17) * 1000);
+}
+
+
+document.fonts.load("81px month");
+</script>
 
 
 
@@ -259,9 +243,7 @@ setInterval(function() { questionMarkAnimation() }, 1);
 
 function showQuestionMark()
 {
-	audio = document.getElementById("questionMarkAudio");
-	audio.currentTime = 0;
-	audio.play();
+	new Audio("audio/qm.mp3").play();
 	questionMark.sizeI = 0;
 	questionMark.setAttribute("height", "0px");
 	questionMark.setAttribute("width", "0px");
@@ -347,17 +329,14 @@ function createDay(index)
 	
 	
 //	Light-dark color pattern
-			color="#AAAAAA";
-	if(index%2==1)	color="#777777";
-	cell.setAttribute("bgcolor", color);
+	cell.setAttribute("bgcolor", (index%2==1) ? "#777777" : "#AAAAAA");
 	
 	
 	return cell;
 }
 
 
-greenCalendarSvg = ["M13 0h10v26h-10v-26z (51,51,51)", "M47 0h10v26h-10v-26z (51,51,51)", "M81 0h10v26h-10v-26z (51,51,51)", "M0 13h13v13h10v-13h24v13h10v-13h24v13h10v-13h13v24h-104v-24z (36,44,25)", "M0 37h104v76h-104v-76z (170,170,170)"];
-grayCalendarSvg = ["M13 0h10v26h-10v-26z (51,51,51)", "M47 0h10v26h-10v-26z (51,51,51)", "M81 0h10v26h-10v-26z (51,51,51)", "M0 13h13v13h10v-13h24v13h10v-13h24v13h10v-13h13v24h-104v-24z (34,34,34)", "M0 37h104v76h-104v-76z (170,170,170)"];
+calendarSvg = ["M13 0h10v26h-10v-26z (51,51,51)", "M47 0h10v26h-10v-26z (51,51,51)", "M81 0h10v26h-10v-26z (51,51,51)", "M0 13h13v13h10v-13h24v13h10v-13h24v13h10v-13h13v24h-104v-24z (36,44,25)", "M0 37h104v76h-104v-76z (170,170,170)"];
 pressedLeftSvg = ["M8 0h8v1h-8v-1z (170,170,170)", "M7 1h1v1h-1v-1z (119,119,119)", "M8 1h8v1h-8v-1z (34,35,36)", "M16 1h1v1h-1v-1z (119,119,119)", "M6 2h1v1h-1v-1z (119,119,119)", "M7 2h1v1h-1v-1z (30,31,32)", "M8 2h8v15h-8v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1h-2v-3h2v-1h1v-1h1v-1h1v-1h1v-1h1v-1z (41,42,43)", "M16 2h1v16h-1v-16z (34,35,36)", "M17 2h1v16h-1v-16z (119,119,119)", "M5 3h1v1h-1v-1z (119,119,119)", "M6 3h1v1h-1v-1z (30,31,32)", "M4 4h1v1h-1v-1z (119,119,119)", "M5 4h1v1h-1v-1z (30,31,32)", "M3 5h1v1h-1v-1z (119,119,119)", "M4 5h1v1h-1v-1z (30,31,32)", "M2 6h1v1h-1v-1z (119,119,119)", "M3 6h1v1h-1v-1z (30,31,32)", "M1 7h1v1h-1v-1z (119,119,119)", "M2 7h1v1h-1v-1z (30,31,32)", "M0 8h1v5h-1v-5z (119,119,119)", "M1 11h1v1h-1v-1z (34,35,36)", "M2 11h1v1h-1v-1z (119,119,119)", "M1 12h1v1h-1v-1z (26,27,28)", "M2 12h1v1h-1v-1z (34,35,36)", "M3 12h1v1h-1v-1z (119,119,119)", "M1 13h1v1h-1v-1z (119,119,119)", "M2 13h1v1h-1v-1z (26,27,28)", "M3 13h1v1h-1v-1z (34,35,36)", "M4 13h1v1h-1v-1z (119,119,119)", "M2 14h1v1h-1v-1z (119,119,119)", "M3 14h1v1h-1v-1z (26,27,28)", "M4 14h1v1h-1v-1z (34,35,36)", "M5 14h1v1h-1v-1z (119,119,119)", "M3 15h1v1h-1v-1z (119,119,119)", "M4 15h1v1h-1v-1z (26,27,28)", "M5 15h1v1h-1v-1z (34,35,36)", "M6 15h1v1h-1v-1z (119,119,119)", "M4 16h1v1h-1v-1z (119,119,119)", "M5 16h1v1h-1v-1z (26,27,28)", "M6 16h1v1h-1v-1z (34,35,36)", "M7 16h1v1h-1v-1z (119,119,119)", "M5 17h1v1h-1v-1z (119,119,119)", "M6 17h1v1h-1v-1z (26,27,28)", "M7 17h1v1h-1v-1z (34,35,36)", "M8 17h8v1h-8v-1z (119,119,119)", "M6 18h1v1h-1v-1z (119,119,119)", "M7 18h1v1h-1v-1z (26,27,28)", "M8 18h7v1h-7v-1z (23,23,18)", "M15 18h1v1h-1v-1z (34,35,36)", "M16 18h1v1h-1v-1z (119,119,119)", "M7 19h9v1h-9v-1z (170,170,170)"];
 pressedRightSvg = ["M2 0h8v1h-8v-1z (170,170,170)", "M1 1h1v1h-1v-1z (119,119,119)", "M2 1h8v1h-8v-1z (34,35,36)", "M10 1h1v1h-1v-1z (119,119,119)", "M0 2h1v16h-1v-16z (119,119,119)", "M1 2h1v16h-1v-16z (34,35,36)", "M2 2h8v1h1v1h1v1h1v1h1v1h1v1h2v3h-2v1h-1v1h-1v1h-1v1h-1v1h-1v1h-8v-15z (41,42,43)", "M10 2h1v1h-1v-1z (30,31,32)", "M11 2h1v1h-1v-1z (119,119,119)", "M11 3h1v1h-1v-1z (30,31,32)", "M12 3h1v1h-1v-1z (119,119,119)", "M12 4h1v1h-1v-1z (30,31,32)", "M13 4h1v1h-1v-1z (119,119,119)", "M13 5h1v1h-1v-1z (30,31,32)", "M14 5h1v1h-1v-1z (119,119,119)", "M14 6h1v1h-1v-1z (30,31,32)", "M15 6h1v1h-1v-1z (119,119,119)", "M15 7h1v1h-1v-1z (30,31,32)", "M16 7h1v1h-1v-1z (119,119,119)", "M17 8h1v5h-1v-5z (119,119,119)", "M15 11h1v1h-1v-1z (119,119,119)", "M16 11h1v1h-1v-1z (34,35,36)", "M14 12h1v1h-1v-1z (119,119,119)", "M15 12h1v1h-1v-1z (34,35,36)", "M16 12h1v1h-1v-1z (26,27,28)", "M13 13h1v1h-1v-1z (119,119,119)", "M14 13h1v1h-1v-1z (34,35,36)", "M15 13h1v1h-1v-1z (26,27,28)", "M16 13h1v1h-1v-1z (119,119,119)", "M12 14h1v1h-1v-1z (119,119,119)", "M13 14h1v1h-1v-1z (34,35,36)", "M14 14h1v1h-1v-1z (26,27,28)", "M15 14h1v1h-1v-1z (119,119,119)", "M11 15h1v1h-1v-1z (119,119,119)", "M12 15h1v1h-1v-1z (34,35,36)", "M13 15h1v1h-1v-1z (26,27,28)", "M14 15h1v1h-1v-1z (119,119,119)", "M10 16h1v1h-1v-1z (119,119,119)", "M11 16h1v1h-1v-1z (34,35,36)", "M12 16h1v1h-1v-1z (26,27,28)", "M13 16h1v1h-1v-1z (119,119,119)", "M2 17h8v1h-8v-1z (119,119,119)", "M10 17h1v1h-1v-1z (34,35,36)", "M11 17h1v1h-1v-1z (26,27,28)", "M12 17h1v1h-1v-1z (119,119,119)", "M1 18h1v1h-1v-1z (119,119,119)", "M2 18h1v1h-1v-1z (34,35,36)", "M3 18h7v1h-7v-1z (23,23,18)", "M10 18h1v1h-1v-1z (26,27,28)", "M11 18h1v1h-1v-1z (119,119,119)", "M2 19h9v1h-9v-1z (170,170,170)"];
 unpressedLeftSvg = ["M8 0h8v1h-8v-1z (170,170,170)", "M7 1h1v1h-1v-1z (119,119,119)", "M8 1h8v1h-8v-1z (34,35,36)", "M16 1h1v1h-1v-1z (119,119,119)", "M6 2h1v1h-1v-1z (119,119,119)", "M7 2h1v1h-1v-1z (34,35,36)", "M8 2h8v13h-8v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1h-2v-1h2v-1h1v-1h1v-1h1v-1h1v-1h1v-1z (41,42,43)", "M16 2h1v16h-1v1h-1v-1h-7v1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-1h-1v-4h1v1h1v1h1v1h1v1h1v1h1v1h1v1h8v-14z (34,35,36)", "M17 2h1v16h-1v-16z (119,119,119)", "M5 3h1v1h-1v-1z (119,119,119)", "M6 3h1v1h-1v-1z (34,35,36)", "M4 4h1v1h-1v-1z (119,119,119)", "M5 4h1v1h-1v-1z (34,35,36)", "M3 5h1v1h-1v-1z (119,119,119)", "M4 5h1v1h-1v-1z (34,35,36)", "M2 6h1v1h-1v-1z (119,119,119)", "M3 6h1v1h-1v-1z (34,35,36)", "M1 7h1v1h-1v-1z (119,119,119)", "M2 7h1v1h-1v-1z (34,35,36)", "M0 8h1v5h-1v-5z (119,119,119)", "M2 9h1v1h-1v-1z (119,119,119)", "M3 10h1v1h-1v-1z (119,119,119)", "M4 11h1v1h-1v-1z (119,119,119)", "M5 12h1v1h-1v-1z (119,119,119)", "M1 13h1v1h-1v-1z (119,119,119)", "M6 13h1v1h-1v-1z (119,119,119)", "M2 14h1v1h-1v-1z (119,119,119)", "M7 14h1v1h-1v-1z (119,119,119)", "M3 15h1v1h-1v-1z (119,119,119)", "M8 15h8v1h-8v-1z (119,119,119)", "M4 16h1v1h-1v-1z (119,119,119)", "M5 17h1v1h-1v-1z (119,119,119)", "M6 18h1v1h-1v-1z (119,119,119)", "M8 18h7v1h-7v-1z (23,23,18)", "M16 18h1v1h-1v-1z (119,119,119)", "M7 19h9v1h-9v-1z (170,170,170)"];
@@ -381,6 +360,8 @@ function setSvg(element, svg)
 		path.setAttribute("d", pathStr);
 		path.setAttribute("fill", "rgb(" + color);
 		
+		if(pathStr == "M0 13h13v13h10v-13h24v13h10v-13h24v13h10v-13h13v24h-104v-24z") element.monthNamePath = path;
+		
 		element.appendChild(path);
 	}
 }
@@ -395,8 +376,8 @@ function pressLeft()
 	
 	
 //	Set the button's texture back to an unpressed one
-	self = this;
-	setTimeout(function() {setSvg(self, unpressedLeftSvg);}, 100);
+	selfR = this;
+	setTimeout(function() {setSvg(selfR, unpressedLeftSvg);}, 100);
 }
 
 function pressRight()
@@ -407,8 +388,8 @@ function pressRight()
 	
 	
 //	Set the button's texture back to an unpressed one
-	self = this;
-	setTimeout(function() {setSvg(self, unpressedRightSvg);}, 100);
+	selfL = this;
+	setTimeout(function() {setSvg(selfL, unpressedRightSvg);}, 100);
 }
 
 
@@ -418,7 +399,7 @@ function prevMonth()
 	if(this.month > 1) {
 		this.month--;
 		this.update();
-		playScroll();
+		new Audio("audio/scroll.mp3").play();
 	}
 }
 
@@ -428,22 +409,7 @@ function nextMonth()
 	if(this.month < 12) {
 		this.month++;
 		this.update();
-		playScroll();
-	}
-}
-
-
-function playScroll()
-{
-//	Loop through possible audio elements, until we find one that isn't playing. This is to ensure that the scrolling sound can be played multiple times without having to reset every time
-	for(i = 1; i <= 5; i++)
-	{
-		audio = document.getElementById("scrollSound" + i);
-		if(audio.paused)
-		{
-			audio.play();
-			break;
-		}
+		new Audio("audio/scroll.mp3").play();
 	}
 }
 
@@ -467,16 +433,22 @@ function generateCalendarUI(year, month, day)
 	calendar.month = month;
 	
 	
-//	Set the calendar's color to either green or black, depending on the year
-			monthNameColor="#242c19";
-	if(year%2==0)	monthNameColor="#000000";
-	
-	
 //	Style the calendar correctly
 	calendar.border = 1;
 	calendar.cellspacing = 0;
 	calendar.style = "display: none";
 	calendar.setAttribute("class", "calendar");
+	
+	
+//	Set the calendar's color to green, black, or red, depending on the year
+	switch(year) {
+		case 1997:
+			monthNameColor="#242c19"; break;
+		case 2000:
+			monthNameColor="#000000"; break;
+		default:
+			monthNameColor="#700000"; break;
+	}
 	
 	
 //	Month name
@@ -486,7 +458,7 @@ function generateCalendarUI(year, month, day)
 	monthNameCell.className = "unselectable";
 	monthNameCell.setAttribute("colspan", 7);
 	monthNameCell.setAttribute("bgcolor", monthNameColor);
-	monthNameCell.style = "font-size:81px; font-weight:200; color:#AAAAAA; margin:auto;";
+	monthNameCell.style = "font-size:81px; font-weight:200; color:#AAAAAA; margin:auto; font-family: month";
 	calendar.monthName = document.createTextNode(monthName[month - 1]);
 	monthNameCell.appendChild(calendar.monthName);
 	
@@ -506,10 +478,12 @@ function generateCalendarUI(year, month, day)
 	rightSvg.setAttribute("viewBox", "0 0 18 20");
 	rightSvg.setAttribute("class", "buttonRight");
 	rightSvg.calendar = calendar;
-	rightSvg.addEventListener("mousedown", pressRight);
+	rightSvg.press = pressRight;
+	rightSvg.addEventListener("mousedown", rightSvg.press);
 	setSvg(rightSvg, unpressedRightSvg);
 	rightSpan.appendChild(rightSvg);
 	calendar.nextMonth = nextMonth;
+	calendar.rightButton = rightSvg;
 	
 	leftSpan = document.createElement("span");
 	leftSpan.style = "float:left; transform: translate(40px, 40px); -webkit-transform: translate(40px, 40px)";
@@ -520,10 +494,12 @@ function generateCalendarUI(year, month, day)
 	leftSvg.setAttribute("viewBox", "0 0 18 20");
 	leftSvg.setAttribute("class", "buttonLeft");
 	leftSvg.calendar = calendar;
-	leftSvg.addEventListener("mousedown", pressLeft);
+	leftSvg.press = pressLeft;
+	leftSvg.addEventListener("mousedown", leftSvg.press);
 	setSvg(leftSvg, unpressedLeftSvg);
 	leftSpan.appendChild(leftSvg);
 	calendar.prevMonth = prevMonth;
+	calendar.leftButton = leftSvg;
 	
 	monthNameCell.appendChild(leftSpan);
 	monthNameCell.appendChild(rightSpan);
@@ -540,9 +516,7 @@ function generateCalendarUI(year, month, day)
 	{
 		dayName = weekdayName[i];
 		dayCell = document.createElement("th");
-				color="#AAAAAA";
-		if(i%2==1)	color="#777777";
-		dayCell.setAttribute("bgcolor", color);
+		dayCell.setAttribute("bgcolor", (i%2==1) ? "#777777" : "#AAAAAA");
 		dayCell.appendChild(document.createTextNode(dayName));
 		weekdayRow.appendChild(dayCell);
 	}
@@ -594,9 +568,7 @@ function updateCalendar()
 		{
 			cell = this.dayCells[index - 1];
 			cell.innerHTML = "";
-					color="#AAAAAA";
-			if(index%2==1)	color="#777777";
-			cell.setAttribute("bgcolor", color);
+			cell.setAttribute("bgcolor", (index%2==1) ? "#777777" : "#AAAAAA");
 			index++;
 		}
 	
@@ -614,24 +586,8 @@ function updateCalendar()
 		pastPresentDay = (this.month == this.presentMonth && monthDay > this.presentDay) || this.month > this.presentMonth;
 		currentPresentDay = this.month == this.presentMonth && monthDay == this.presentDay;
 		greenDay = monthGreenSort[this.month - 1](monthDay) && this.year == 1997;
-		if(!pastPresentDay)
-		{
-		if(greenDay && !currentPresentDay)
-		{	//		Green for marked dates
-					color="#76b549";
-			if(evenCell)	color="#69a53c";
-		}
-		else
-		{	//		Gray for normal dates
-					color="#AAAAAA";
-			if(evenCell)	color="#777777";
-		}
-		}
-		else {	//		Dark gray for future dates
-					color="#444444";
-			if(evenCell)	color="#333333";
-		}
-		if(color != "") cell.setAttribute("bgcolor", color);
+		
+		cell.setAttribute("bgcolor", (!pastPresentDay) ? ((greenDay && !currentPresentDay) ? ((evenCell) ? "#69a53d" : "#75b549") : ((evenCell) ? "#777777" : "#AAAAAA")) : ((evenCell) ? "#333333" : "#444444")); // Green for marked dates; gray for normal dates; dark gray for future dates
 		
 //		Special dates
 		if(this.year == 1997 && this.month == 6 && monthDay == 13 && !pastPresentDay && !currentPresentDay)
@@ -663,9 +619,7 @@ function updateCalendar()
 	{
 		cell = this.dayCells[index - 1];
 		cell.innerHTML = "";
-				color="#AAAAAA";
-		if(index%2==1)	color="#777777";
-		cell.setAttribute("bgcolor", color);
+		cell.setAttribute("bgcolor", (index%2==1) ? "#777777" : "#AAAAAA");
 		index++;
 	}
 }
@@ -678,10 +632,17 @@ function createCalendar(year, month, day)
 	icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 	
 	
-//	Set the calendar's color to either green or black, depending on the year
-			svg=grayCalendarSvg;
-	if(year%2==1)	svg=greenCalendarSvg;
-	setSvg(icon, svg);
+//	Set the calendar's appearance and color
+	switch(year) {
+		case 1997:
+			monthNameColor="#242c19"; break;
+		case 2000:
+			monthNameColor="#222222"; break;
+		default:
+			monthNameColor="#700000"; break;
+	}
+	setSvg(icon, calendarSvg);
+	icon.monthNamePath.setAttribute("fill", monthNameColor);
 	
 	
 //	Style the calendar correctly
@@ -721,10 +682,7 @@ function inspectCalendar()
 	
 	
 //	Play audio
-				sound = document.getElementById("evenYearSound");
-	if(calendar.year%2==1)	sound = document.getElementById("oddYearSound");
-	sound.currentTime = 0;
-	sound.play();
+	new Audio("audio/" + ((calendar.year%2==1) ? "97" : "00") + ".mp3").play();
 	
 	
 //	Hide the menu
@@ -747,15 +705,48 @@ function returnToMenu()
 }
 
 
+var isHoldingKey = false;
+
 // If the user presses Esc, close the calendar UI
-document.onkeydown = function(evt) {
-	evt = evt || window.event;
-	isEscape = false;
-	if ("key" in evt)
-		isEscape = (evt.key == "Escape" || evt.key == "Esc");
-	else	isEscape = (evt.keyCode == 27);
-	if (isEscape) returnToMenu();
+// If the user presses the arrow keys, scroll through the calendar
+document.onkeydown = function(evt)
+{
+	if(!isHoldingKey) {
+		evt = evt || window.event;
+		if("key" in evt)
+		{
+			key = evt.key;
+			if(key == "Escape" || key == "Esc")	returnToMenu();
+			if(key == "ArrowLeft" && currentOpenCalendar)	currentOpenCalendar.leftButton.press();
+			if(key == "ArrowRight" && currentOpenCalendar)	currentOpenCalendar.rightButton.press();
+		}
+		else
+		{
+			key = evt.keyCode;
+			if(key == 27)	returnToMenu();
+			if(key == 37 && currentOpenCalendar)	currentOpenCalendar.leftButton.press();
+			if(key == 39 && currentOpenCalendar)	currentOpenCalendar.rightButton.press();
+		}
+		
+		isHoldingKey = true;
+	}
 };
+
+document.onkeyup = function(evt)
+{
+	isHoldingKey = false;
+}
+
+
+window.onfocus = function()
+{
+	focused = true;
+}
+
+window.onblur = function()
+{
+	focused = false;
+}
 
 
 
@@ -809,7 +800,7 @@ setInterval(function() {
 	
 	for(i = 0; i < highlightedDays.length; i++) {
 		day = highlightedDays[i];
-		style = "transform: rotate(" + highlightValue * -22.5 + "deg) scale(" + (1.25 + highlightValue / 4) + ");";
+		style = "transform: rotate(" + highlightValue * -22.5 + "deg) scale(" + (1 + highlightValue / 4.7272727272) + ");";
 		day.style = style + "-webkit-" + style;
 	}
 	
