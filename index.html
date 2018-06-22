@@ -655,7 +655,7 @@ function createCalendar(year, month, day)
 //	Selection box, for question mark overlay and inspecting the calendar
 	selectionRect = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
 	selectionRect.setAttribute("points", "0,0 104,0 104,113 0,113");
-	selectionRect.style = "fill:rgba(0,0,0,0)";
+	selectionRect.style = "fill:rgba(0,0,0,0); cursor: pointer";
 	icon.appendChild(selectionRect);
 	selectionRect.self = icon;
 	selectionRect.addEventListener("mousedown", inspectCalendar);
