@@ -446,8 +446,10 @@ function generateCalendarUI(year, month, day)
 			monthNameColor="#242c19"; break;
 		case 2000:
 			monthNameColor="#000000"; break;
+		case 2017:
+			monthNameColor="#881818"; break;
 		default:
-			monthNameColor="#700000"; break;
+			monthNameColor="#ffffff"; break;
 	}
 	
 	
@@ -638,8 +640,10 @@ function createCalendar(year, month, day)
 			monthNameColor="#242c19"; break;
 		case 2000:
 			monthNameColor="#222222"; break;
+		case 2017:
+			monthNameColor="#7a0000"; break;
 		default:
-			monthNameColor="#700000"; break;
+			monthNameColor="#ffffff"; break;
 	}
 	setSvg(icon, calendarSvg);
 	icon.monthNamePath.setAttribute("fill", monthNameColor);
@@ -682,7 +686,7 @@ function inspectCalendar()
 	
 	
 //	Play audio
-	new Audio("audio/" + ((calendar.year%2==1) ? "97" : "00") + ".mp3").play();
+	new Audio("audio/" + calendar.year + ".mp3").play();
 	
 	
 //	Hide the menu
@@ -749,10 +753,14 @@ window.onblur = function()
 }
 
 
-
 createCalendar(1997, 12, 25);
 createCalendar(2000, 12, 25);
+
 createCalendar(1997, 6, 5);
+
+createCalendar(1997, 11, 12);
+createCalendar(2017, 11, 12);
+
 date = new Date();
 createCalendar(date.getFullYear(), date.getMonth() + 1, date.getDate());
 
